@@ -25,7 +25,7 @@
 
 public struct Scrypt {
     
-    public var N: UInt64
+    public var log2n: UInt64
     
     public var r: UInt64
     
@@ -34,12 +34,12 @@ public struct Scrypt {
     public var keySize: Int
     
     public init(
-        N: UInt64 = 16384,
+        log2n: UInt64 = 14,
         r: UInt64 = 8,
         p: UInt64 = 1,
         keySize: Int = 64
     ) {
-        self.N = N
+        self.log2n = log2n
         self.r = r
         self.p = p
         self.keySize = keySize
@@ -55,7 +55,7 @@ extension Scrypt {
             let retval = CCryptoBoringSSL_EVP_PBE_scrypt(
                 plaintext, plaintext.utf8.count,
                 salt.baseAddress, salt.count,
-                N, r, p, 0,
+                1 << log2n, r, p, 0,
                 buffer.baseAddress, keySize
             )
             

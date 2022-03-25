@@ -37,7 +37,7 @@ class DigestTest: XCTestCase {
     
     func testScrypt() throws {
         
-        let scrypt = Scrypt(N: 16384, r: 8, p: 1, keySize: 64)
+        let scrypt = Scrypt(log2n: 14, r: 8, p: 1, keySize: 64)
         
         let result = try scrypt.hash("hello", salt: "abcd")
         
