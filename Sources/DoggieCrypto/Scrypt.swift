@@ -48,7 +48,7 @@ public struct Scrypt {
 
 extension Scrypt {
     
-    public func hash(_ plaintext: String, salt: UnsafeBufferPointer<UInt8>) throws -> [UInt8] {
+    private func _hash(_ plaintext: String, salt: UnsafeRawBufferPointer) throws -> [UInt8] {
         
         return try Array(unsafeUninitializedCapacity: keySize) { buffer, initializedCount in
             
@@ -70,10 +70,10 @@ extension Scrypt {
     
     public func hash(_ plaintext: String, salt: String) throws -> [UInt8] {
         var salt = salt
-        return try salt.withUTF8 { try self.hash(plaintext, salt: $0) }
+        return try salt.withUTF8 { try self._hash(plaintext, salt: UnsafeRawBufferPointer($0)) }
     }
     
-    public func hash(_ plaintext: String, salt: [UInt8]) throws -> [UInt8] {
-        return try salt.withUnsafeBufferPointer { try self.hash(plaintext, salt: $0) }
+    public func hash<Bytes: ContiguousBytes>(_ plaintext: String, salt: Bytes) throws -> [UInt8] {
+        return try salt.withUnsafeBytes { try self._hash(plaintext, salt: $0) }
     }
 }
