@@ -1,5 +1,5 @@
 //
-//  DigestTest.swift
+//  safe_compare.swift
 //
 //  The MIT License
 //  Copyright (c) 2015 - 2022 Susan Cheng. All rights reserved.
@@ -23,24 +23,19 @@
 //  THE SOFTWARE.
 //
 
-import DoggieCrypto
-import XCTest
+@inlinable
+public func safe_compare<LHS: Collection, RHS: Collection>(_ lhs: LHS, _ rhs: RHS) -> Bool where LHS.Element: Equatable, LHS.Element == RHS.Element {
+    guard lhs.count == rhs.count else { return false }
+    return zip(lhs, rhs).reduce(true) { $0 && $1.0 == $1.1 }
+}
 
-class DigestTest: XCTestCase {
-    
-    func testDigest() {
-        
-        let result = md5("hello, world".data(using: .utf8)!)
-        
-        XCTAssertEqual(result.hexString, "e4d7f1b4ed2e42d15898f4b27b019da4")
-    }
-    
-    func testScrypt() throws {
-        
-        let scrypt = Scrypt(log2n: 14, blockSize: 8, parallel: 1, keySize: 64)
-        
-        let result = try scrypt.hash("hello", salt: "abcd")
-        
-        XCTAssertEqual(result.withUnsafeBytes(bytes_to_hex), "ebd9ccbdb1c070ad6d38bace52a2611c1dd006b2b0974ff8667ca592c319535943d66c1caf8cd66015c5e90e81423c82c87632a543b1fd79082800a8944b81db")
-    }
+@inlinable
+func _safe_compare_bytes<LHS: Collection, RHS: Collection>(_ lhs: LHS, _ rhs: RHS) -> Bool where LHS.Element == UInt8, RHS.Element == UInt8 {
+    guard lhs.count == rhs.count else { return false }
+    return zip(lhs, rhs).reduce(into: 0) { $0 |= $1.0 ^ $1.1 } == 0
+}
+
+@inlinable
+public func safe_compare_bytes<LHS: ContiguousBytes, RHS: ContiguousBytes>(_ lhs: LHS, _ rhs: RHS) -> Bool {
+    return lhs.withUnsafeBytes { lhs in rhs.withUnsafeBytes { rhs in _safe_compare_bytes(lhs, rhs) } }
 }

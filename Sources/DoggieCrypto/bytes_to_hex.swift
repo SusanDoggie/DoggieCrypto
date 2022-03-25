@@ -1,5 +1,5 @@
 //
-//  _bytes_to_hex.swift
+//  bytes_to_hex.swift
 //
 //  The MIT License
 //  Copyright (c) 2015 - 2022 Susan Cheng. All rights reserved.
@@ -42,6 +42,6 @@ private let chars = [
     "f0", "f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "fa", "fb", "fc", "fd", "fe", "ff",
 ]
 
-public func _bytes_to_hex(_ bytes: UnsafeRawBufferPointer) -> String {
+public func bytes_to_hex(_ bytes: UnsafeRawBufferPointer) -> String {
     return chars.withUnsafeBufferPointer { chars in bytes.map { chars[Int($0)] }.joined() }
 }

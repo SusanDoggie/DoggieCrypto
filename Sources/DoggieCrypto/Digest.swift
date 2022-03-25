@@ -26,7 +26,7 @@
 extension Digest {
     
     public var hexString: String {
-        self.withUnsafeBytes(_bytes_to_hex)
+        self.withUnsafeBytes(bytes_to_hex)
     }
 }
 
