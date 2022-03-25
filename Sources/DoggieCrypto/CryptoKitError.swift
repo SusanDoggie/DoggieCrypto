@@ -1,5 +1,5 @@
 //
-//  DigestTest.swift
+//  CryptoKitError.swift
 //
 //  The MIT License
 //  Copyright (c) 2015 - 2022 Susan Cheng. All rights reserved.
@@ -23,24 +23,10 @@
 //  THE SOFTWARE.
 //
 
-import DoggieCrypto
-import XCTest
-
-class DigestTest: XCTestCase {
+extension CryptoKitError {
     
-    func testDigest() {
-        
-        let result = md5("hello, world".data(using: .utf8)!)
-        
-        XCTAssertEqual(result.hexString, "e4d7f1b4ed2e42d15898f4b27b019da4")
-    }
-    
-    func testScrypt() throws {
-        
-        let scrypt = Scrypt(N: 16384, r: 8, p: 1, keySize: 64)
-        
-        let result = try scrypt.hash("hello", salt: "abcd")
-        
-        XCTAssertEqual(result.withUnsafeBytes(_bytes_to_hex), "ebd9ccbdb1c070ad6d38bace52a2611c1dd006b2b0974ff8667ca592c319535943d66c1caf8cd66015c5e90e81423c82c87632a543b1fd79082800a8944b81db")
+    @usableFromInline
+    static func internalBoringSSLError() -> CryptoKitError {
+        .underlyingCoreCryptoError(error: Int32(bitPattern: CCryptoBoringSSL_ERR_get_error()))
     }
 }
