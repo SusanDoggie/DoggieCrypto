@@ -54,7 +54,7 @@ extension Scrypt {
             
             let retval = CCryptoBoringSSL_EVP_PBE_scrypt(
                 plaintext, plaintext.utf8.count,
-                salt.baseAddress, salt.count,
+                salt.baseAddress!.assumingMemoryBound(to: UInt8.self), salt.count,
                 1 << log2n, blockSize, parallel, 0,
                 buffer.baseAddress, keySize
             )
