@@ -33,11 +33,9 @@ class OTPTest: XCTestCase {
         var key = "secret_key"
         let _key = key.withUTF8(SymmetricKey.init)
         
-        let digest = HMAC<Insecure.SHA1>.authenticationCode(for: [0, 0, 0, 0, 0, 0, 0, 0], using: _key)
-        
-        XCTAssertEqual(OTP.generate(digest, .six), "051145")
-        XCTAssertEqual(OTP.generate(digest, .seven), "8051145")
-        XCTAssertEqual(OTP.generate(digest, .eight), "08051145")
+        XCTAssertEqual(OTP.generate(counter: 0, key: _key, digits: .six, algorithm: Insecure.SHA1.self), "051145")
+        XCTAssertEqual(OTP.generate(counter: 0, key: _key, digits: .seven, algorithm: Insecure.SHA1.self), "8051145")
+        XCTAssertEqual(OTP.generate(counter: 0, key: _key, digits: .eight, algorithm: Insecure.SHA1.self), "08051145")
     }
     
 }

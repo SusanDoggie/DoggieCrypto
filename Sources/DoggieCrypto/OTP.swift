@@ -54,8 +54,8 @@ extension OTP.Digits {
 extension OTP {
     
     public static func generate<D: MessageAuthenticationCode>(
-        _ digest: D,
-        _ digits: Digits
+        digest: D,
+        digits: Digits
     ) -> String {
         
         let hmac = Data(digest)
@@ -79,5 +79,20 @@ extension OTP {
         
         let prefixedZeros = String(repeatElement("0", count: (digits.rawValue - result.count)))
         return prefixedZeros + result
+    }
+}
+
+extension OTP {
+    
+    public static func generate<H: HashFunction>(
+        counter: UInt64,
+        key: SymmetricKey,
+        digits: Digits,
+        algorithm: H.Type
+    ) -> String {
+        
+        let digest = withUnsafeBytes(of: counter.bigEndian) { HMAC<H>.authenticationCode(for: $0, using: key) }
+        
+        return self.generate(digest: digest, digits: digits)
     }
 }
