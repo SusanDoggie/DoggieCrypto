@@ -42,8 +42,17 @@ let package = Package(
     ],
     targets: [
         .target(
+            name: "libscrypt",
+            sources: [
+                "libscrypt/crypto_scrypt-nosse.c",
+                "libscrypt/sha256.c",
+                "libscrypt/slowequals.c",
+            ]
+        ),
+        .target(
             name: "DoggieCrypto",
             dependencies: [
+                "libscrypt",
                 .product(name: "Crypto", package: "swift-crypto"),
             ]
         ),

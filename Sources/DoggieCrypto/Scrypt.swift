@@ -23,20 +23,22 @@
 //  THE SOFTWARE.
 //
 
+import libscrypt
+
 public struct Scrypt {
     
     public var log2n: UInt64
     
-    public var blockSize: UInt64
+    public var blockSize: UInt32
     
-    public var parallel: UInt64
+    public var parallel: UInt32
     
     public var keySize: Int
     
     public init(
         log2n: UInt64 = 14,
-        blockSize: UInt64 = 8,
-        parallel: UInt64 = 1,
+        blockSize: UInt32 = 8,
+        parallel: UInt32 = 1,
         keySize: Int = 64
     ) {
         self.log2n = log2n
@@ -52,14 +54,14 @@ extension Scrypt {
         
         return try Array(unsafeUninitializedCapacity: keySize) { buffer, initializedCount in
             
-            let retval = CCryptoBoringSSL_EVP_PBE_scrypt(
+            let retval = libscrypt_scrypt(
                 plaintext, plaintext.utf8.count,
                 salt.baseAddress!.assumingMemoryBound(to: UInt8.self), salt.count,
-                1 << log2n, blockSize, parallel, 0,
+                1 << log2n, blockSize, parallel,
                 buffer.baseAddress, keySize
             )
             
-            guard retval == 1 else { throw CryptoKitError.internalBoringSSLError() }
+            guard retval == 0 else { throw CryptoKitError.underlyingCoreCryptoError(error: errno) }
             
             initializedCount = keySize
         }

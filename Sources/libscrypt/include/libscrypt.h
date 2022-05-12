@@ -1,5 +1,5 @@
 //
-//  CryptoKitError.swift
+//  libscrypt.h
 //
 //  The MIT License
 //  Copyright (c) 2015 - 2022 Susan Cheng. All rights reserved.
@@ -23,10 +23,4 @@
 //  THE SOFTWARE.
 //
 
-extension CryptoKitError {
-    
-    @usableFromInline
-    static func internalBoringSSLError() -> CryptoKitError {
-        .underlyingCoreCryptoError(error: Int32(bitPattern: CCryptoBoringSSL_ERR_get_error()))
-    }
-}
+#include "../libscrypt/libscrypt.h"

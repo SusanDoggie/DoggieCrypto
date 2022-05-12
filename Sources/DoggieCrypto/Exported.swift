@@ -26,6 +26,3 @@
 @_exported import Foundation
 
 @_exported import Crypto
-
-@_exported import CCryptoBoringSSL
-@_exported import CCryptoBoringSSLShims

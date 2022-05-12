@@ -34,6 +34,8 @@ public func secureRandomCopyBytes(_ bytes: UnsafeMutableRawBufferPointer) throws
 
 #else
 
+import CCryptoBoringSSL
+
 public func secureRandomCopyBytes(_ bytes: UnsafeMutableRawBufferPointer) throws {
     guard CCryptoBoringSSL_RAND_bytes(bytes.baseAddress!.assumingMemoryBound(to: UInt8.self), bytes.count) == 1 else { throw CryptoKitError.internalBoringSSLError() }
 }
